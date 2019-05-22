@@ -10,7 +10,7 @@ struct heap
     int *node;
     size_t size;
 };
-struct heap *constructor(int cpacity);
+struct heap *constructor(int capacity);
 size_t Left(size_t i);
 size_t Right(size_t i);
 size_t Parent(size_t i);

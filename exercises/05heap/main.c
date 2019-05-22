@@ -1,7 +1,19 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
 
 #include "heap.h"
+
+#define N 100000000
+
+double get_execution_time(const struct timespec b_time,
+                          const struct timespec e_time)
+{
+    return (e_time.tv_sec - b_time.tv_sec) +
+           (e_time.tv_nsec - b_time.tv_nsec) / 1E9;
+}
 
 int IntRandomNumber(int min, int max)
 {
@@ -10,21 +22,35 @@ int IntRandomNumber(int min, int max)
 
 int main()
 {
-    struct heap *H = constructor(11);
-    //40 70 70 64 62 36 26 74 20 42
 
-    for (int i = 0; i < 10; i++)
-    {
-        Insert_Key(H, IntRandomNumber(0, 20));
-    }
+    struct timespec b_time, e_time;
+    srand(10);
 
-    //printf("minimum is %d\n", Minimum(H));
-    //Decrease_Key(H, 2, 1);
-    //printf("minimum is %d\n", Minimum(H));
-    for (size_t i = 0; i < H->size; i++)
-        printf("%d ", H->node[i]);
-    printf("\n");
-    destructor(H);
+    int *A = (int *)malloc(sizeof(int) * N);
+    struct heap H;
+
+    for (int i = 0; i < N; i++)
+        A[i] = IntRandomNumber(1, N);
+
+    clock_gettime(CLOCK_REALTIME, &b_time);
+    H = Build_Max_Heap(A, N);
+    clock_gettime(CLOCK_REALTIME, &e_time);
+
+    printf("Time to build a heap: %lf\n", get_execution_time(b_time, e_time));
+
+    clock_gettime(CLOCK_REALTIME, &b_time);
+    Decrease_Key(&H, 1, 0);
+    clock_gettime(CLOCK_REALTIME, &e_time);
+
+    printf("Time to decrease a key: %lf\n", get_execution_time(b_time, e_time));
+
+    clock_gettime(CLOCK_REALTIME, &b_time);
+    Insert_Key(&H, 100);
+    clock_gettime(CLOCK_REALTIME, &e_time);
+
+    printf("Time to insert a key: %lf\n", get_execution_time(b_time, e_time));
+
+    //destructor(&H);
 
     return 0;
 }

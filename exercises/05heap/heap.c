@@ -82,7 +82,7 @@ int Remove_Minimum(struct heap *H)
 void Decrease_Key(struct heap *H, size_t i, int value)
 {
     if (H->node[i] <= value)
-        printf("%d is not smaller than the node", value);
+        printf("%d is not smaller than the node (%d)\n", value, H->node[i]);
 
     H->node[i] = value;
     //std::size_t tmp = Parent(i);
@@ -108,7 +108,7 @@ struct heap Build_Max_Heap(int *A, size_t length_of_A)
 
     for (size_t i = Parent(length_of_A) - 1; i >= 0; i--)
     {
-        Max_Heapify(&alias, i);
+        Heapify(&alias, i);
         if (i == 0)
             break;
     }
