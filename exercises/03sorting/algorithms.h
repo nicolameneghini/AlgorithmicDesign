@@ -16,7 +16,7 @@ struct vector
 
 void insertion_sort(double *A, unsigned int n);
 
-unsigned int partition(double *A, unsigned int l, unsigned int n);
+unsigned int partition(double *A, unsigned int l, unsigned int n, unsigned int ind_pivot);
 
 void quick_sort(double *A, unsigned int l, unsigned int n);
 
@@ -28,10 +28,15 @@ void HeapSort(int *A, size_t n);
 
 int *CountingSort(int *A, int *B, size_t length_of_A);
 
+void RadixSort(int *A, int *B, size_t length_of_A);
+
 void BucketSort(double *A, size_t length_of_A);
 
 void append(double value, struct vector *vec);
 
-void SelectSort(int *arr, int n);
 
+size_t find_in_array(double *A, double target, size_t length_of_A);
+double Select(double *A, size_t i, size_t l, size_t length_of_A);
+
+size_t select_pivot(double *A, size_t group_by, size_t begin, size_t end);
 #endif //__ALGORITHMS__

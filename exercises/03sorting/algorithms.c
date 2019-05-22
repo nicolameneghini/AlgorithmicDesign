@@ -22,14 +22,12 @@ void int_swap(int *A, unsigned int i, unsigned int k)
 
 int FindMax(int *A, size_t length_of_A)
 {
+    int max = A[0];
 
-    int max = 0;
-
-    for (unsigned int i = 0; i < length_of_A; i++)
-    {
+    for (unsigned int i = 1; i < length_of_A; i++)
         if (A[i] > max)
             max = A[i];
-    }
+
     return max;
 }
 
@@ -50,10 +48,10 @@ void insertion_sort(double *A, unsigned int n)
     }
 }
 
-unsigned int partition(double *A, unsigned int l, unsigned int n)
+unsigned int partition(double *A, unsigned int l, unsigned int n, unsigned int ind_pivot)
 {
     // pivot (Element to be placed at right position)
-    double pivot = A[n];
+    double pivot = A[ind_pivot];
 
     unsigned int i = (l - 1); // Index of smaller element
 
@@ -79,7 +77,7 @@ void quick_sort(double *A, unsigned int l, unsigned int n)
     {
         /* pi is partitioning index, arr[pi] is now
            at right place */
-        pi = partition(A, l, n);
+        pi = partition(A, l, n, n);
 
         quick_sort(A, l, pi - 1); // Before pi
         l = pi + 1;               // After pi
@@ -125,7 +123,7 @@ void HeapSort(int *A, size_t n)
 {
 
     struct heap H;
-    H = Build_Max_Heap(A, n);
+    H =  Build_Max_Heap(A, n);
     H.size -= 1; //serve perché senno parte da n anziché n-1
 
     for (int i = n - 1; i > 0; i--)
@@ -162,10 +160,43 @@ int *CountingSort(int *A, int *B, size_t length_of_A)
     return B;
 }
 
+void RadixSort(int *A, int *B, size_t length_of_A)
+{
+
+    int max = FindMax(A, length_of_A);
+
+    for (unsigned int i = 1; max / i > 0; i *= 10)
+    {
+
+        int *count = (int *)calloc(sizeof(int), 10);
+
+        for (unsigned int j = 0; j < length_of_A; j++)
+            count[(A[j] / i) % 10]++;
+
+        for (unsigned int j = 1; j < 10; j++)
+            count[j] += count[j - 1];
+
+        for (unsigned int j = length_of_A; j > 0; j--)
+        {
+            B[count[(A[j] / i) % 10] - 1] = A[j];
+            count[(A[j] / i) % 10]--;
+        }
+
+        B[count[(A[0] / i) % 10] - 1] = A[0];
+        count[(A[0] / i) % 10]--;
+
+        for (int j = 0; j < length_of_A; j++)
+            A[j] = B[j];
+
+        free(count);
+    }
+}
+
 void BucketSort(double *A, size_t length_of_A)
 {
     struct vector *B = (struct vector *)malloc(sizeof(struct vector) * length_of_A); //ho fatto la struct vector per poter usare append. In append c'è bisogno
     //di passare la dimensione dell'array e l'unico modo per farlo è immagazzinarla nella struct
+   
 
     for (unsigned int i = 0; i < length_of_A; i++)
     {
@@ -181,9 +212,12 @@ void BucketSort(double *A, size_t length_of_A)
         {
             insertion_sort(B[index].elem, B[index].size);
 
-            A[i++] = B[index].elem[v];
+            A[i] = B[index].elem[v];
+            i++;
         }
     }
+
+    
 }
 
 void append(double value, struct vector *vec)
@@ -197,6 +231,7 @@ void append(double value, struct vector *vec)
         tmp[i] = vec->elem[i];
     }
 
+
     free(vec->elem);
 
     tmp[vec->size] = value;
@@ -204,17 +239,46 @@ void append(double value, struct vector *vec)
     vec->elem = tmp;
 }
 
-void SelectSort(int *arr, int n)
+size_t select_pivot(double *A, size_t group_by, size_t begin, size_t end)
 {
-    int i, j, min;
+    //if only one chunk return the median
 
-    for (i = 0; i < n - 1; i++)
+    double medians[(end - begin) / group_by];
+
+    for (unsigned int i = begin; i < end; i += group_by)
     {
-        min = i;
-        for (j = i + 1; j < n; j++)
-            if (arr[j] < arr[min])
-                min = j;
-
-        int_swap(arr, min, i);
+        quick_sort(A, i, i + group_by - 1);           //sorting each chunk
+        size_t median = (i + (i + group_by - 1)) / 2; //taking the median of each chunk
+        medians[i / group_by] = A[median];
     }
+
+    size_t index = find_in_array(A, medians[((end - begin) / group_by) / 2], end);
+
+    return index;
+}
+
+size_t find_in_array(double *A, double target, size_t length_of_A)
+{
+    for (size_t i = 0; i < length_of_A; i++)
+        if (A[i] == target)
+        {
+            return i;
+            break;
+        }
+
+    return -1;
+}
+
+double Select(double *A, size_t i, size_t l, size_t length_of_A)
+{
+    //size_t j = select_pivot(A, 5, l, length_of_A);
+    size_t k = partition(A, l, length_of_A, length_of_A-1);
+
+    if (i == k + 1)
+        return A[k];
+
+    if (i < k + 1)
+        return Select(A, i, l, k - 1);
+
+    return Select(A, i, k + 1, length_of_A);
 }
