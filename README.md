@@ -1,6 +1,6 @@
 ## Homework for the Algorithm Design course
 
-C implemnetation of:
+C implemenetation of:
 
 * Strassen's Algorithm
 * Optimal Chain Matrix Multiplication
