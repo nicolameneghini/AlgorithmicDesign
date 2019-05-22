@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     strassen(C1, A, B, i);
     clock_gettime(CLOCK_REALTIME, &e_time);
 
-    printf("\t %d, %lf", cont, get_execution_time(b_time, e_time));
+    printf("\t%lf", get_execution_time(b_time, e_time));
 
     printf("\t%d\n", same_matrix(C0, i, i, C1, i, i));
   }
