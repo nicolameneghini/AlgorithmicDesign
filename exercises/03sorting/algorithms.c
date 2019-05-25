@@ -31,12 +31,24 @@ int FindMax(int *A, size_t length_of_A)
     return max;
 }
 
+int FindMaxd(double *A, int length_of_A)
+{
+    double max = A[0];
+    unsigned int i = 0;
+
+    for (i = 1; i < length_of_A; i++)
+        if (A[i] > max)
+            max = A[i];
+
+    return i;
+}
+
 void insertion_sort(double *A, unsigned int n)
 {
 
     unsigned int j;
 
-    for (unsigned int i = 1; i < n; i++)
+    for (unsigned int i = 0; i < n; i++)
     {
         j = i;
 
@@ -84,6 +96,21 @@ void quick_sort(double *A, unsigned int l, unsigned int n)
     }
 }
 
+void quick_sort_pivot(double *A, unsigned int l, unsigned int n, unsigned int pivot)
+{
+    unsigned int pi;
+
+    while (l < n)
+    {
+        /* pi is partitioning index, arr[pi] is now
+           at right place */
+        pi = partition(A, l, n, pivot);
+
+        quick_sort(A, l, pi - 1); // Before pi
+        l = pi + 1;               // After pi
+    }
+}
+
 void bubble_sort(double *A, unsigned int n)
 {
 
@@ -123,7 +150,7 @@ void HeapSort(int *A, size_t n)
 {
 
     struct heap H;
-    H =  Build_Max_Heap(A, n);
+    H = Build_Max_Heap(A, n);
     H.size -= 1; //serve perché senno parte da n anziché n-1
 
     for (int i = n - 1; i > 0; i--)
@@ -196,7 +223,6 @@ void BucketSort(double *A, size_t length_of_A)
 {
     struct vector *B = (struct vector *)malloc(sizeof(struct vector) * length_of_A); //ho fatto la struct vector per poter usare append. In append c'è bisogno
     //di passare la dimensione dell'array e l'unico modo per farlo è immagazzinarla nella struct
-   
 
     for (unsigned int i = 0; i < length_of_A; i++)
     {
@@ -216,8 +242,6 @@ void BucketSort(double *A, size_t length_of_A)
             i++;
         }
     }
-
-    
 }
 
 void append(double value, struct vector *vec)
@@ -231,7 +255,6 @@ void append(double value, struct vector *vec)
         tmp[i] = vec->elem[i];
     }
 
-
     free(vec->elem);
 
     tmp[vec->size] = value;
@@ -243,41 +266,57 @@ size_t select_pivot(double *A, size_t group_by, size_t begin, size_t end)
 {
     //if only one chunk return the median
 
-    double medians[(end - begin) / group_by];
-
-    for (unsigned int i = begin; i < end; i += group_by)
+    if ((end - begin) <= group_by)
+        return 0;
+    else
     {
-        quick_sort(A, i, i + group_by - 1);           //sorting each chunk
-        size_t median = (i + (i + group_by - 1)) / 2; //taking the median of each chunk
-        medians[i / group_by] = A[median];
+        double *medians = (double *)malloc(sizeof(double) * (end - begin) / group_by);
+
+        for (unsigned int i = begin; i < end; i += group_by)
+        {
+            quick_sort((A + i * group_by), i, i + group_by - 1); //sorting each chunk
+            size_t median = (i + (i + group_by - 1)) / 2;        //taking the median of each chunk
+            medians[i / group_by] = A[median];
+            //printf("begin %zu, end: %zu, median %zu, medians[i]: %f\n", begin, end, median, medians[i / group_by]);
+        }
+
+        size_t index = find_in_array(A, medians[((end - begin) / group_by) / 2], begin, end);
+
+        // printf("index = %zu\n", index);
+
+        return index;
+        free(medians);
     }
-
-    size_t index = find_in_array(A, medians[((end - begin) / group_by) / 2], end);
-
-    return index;
 }
 
-size_t find_in_array(double *A, double target, size_t length_of_A)
+size_t find_in_array(double *A, double target, size_t begin, size_t end)
 {
-    for (size_t i = 0; i < length_of_A; i++)
+    for (size_t i = begin; i <= end; i++)
         if (A[i] == target)
         {
             return i;
             break;
         }
 
-    return -1;
+    return (end - begin) / 2;
 }
 
-double Select(double *A, size_t i, size_t l, size_t length_of_A)
+double Select(double *A, unsigned int i, unsigned int l, unsigned int length_of_A)
 {
-    //size_t j = select_pivot(A, 5, l, length_of_A);
-    size_t k = partition(A, l, length_of_A, length_of_A-1);
+    size_t j;
 
-    if (i == k + 1)
+    if (length_of_A - l <= 10)
+        j = 0;
+
+    else
+        j = select_pivot(A, 5, l, length_of_A);
+
+    unsigned int k = partition(A, l, length_of_A, j);
+
+    if (i == k)
         return A[k];
 
-    if (i < k + 1)
+    if (i < k)
         return Select(A, i, l, k - 1);
 
     return Select(A, i, k + 1, length_of_A);

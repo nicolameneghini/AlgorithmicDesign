@@ -20,6 +20,10 @@ unsigned int partition(double *A, unsigned int l, unsigned int n, unsigned int i
 
 void quick_sort(double *A, unsigned int l, unsigned int n);
 
+void quick_sort_pivot(double *A, unsigned int l, unsigned int n, unsigned int worst_pivot);
+
+int FindMaxd(double *A, int length_of_A);
+
 void bubble_sort(double *A, unsigned int n);
 
 //unsigned int di_find(double *A, unsigned int l, unsigned int n, double a);
@@ -34,9 +38,9 @@ void BucketSort(double *A, size_t length_of_A);
 
 void append(double value, struct vector *vec);
 
+size_t find_in_array(double *A, double target, size_t begin, size_t end);
 
-size_t find_in_array(double *A, double target, size_t length_of_A);
-double Select(double *A, size_t i, size_t l, size_t length_of_A);
+double Select(double *A, unsigned int i, unsigned int l, unsigned int length_of_A);
 
 size_t select_pivot(double *A, size_t group_by, size_t begin, size_t end);
 #endif //__ALGORITHMS__
