@@ -8,7 +8,7 @@ C implemenetation of:
 * Binary Heap (array-based representation)
 * Dijkstra's Algorithm
 
-To run the codes go to the respective folder and compile and run with
+To execute the codes just go to the respective folder and compile and run with
 
 ~~~~
 gcc *.c -o main.x
