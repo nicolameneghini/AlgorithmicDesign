@@ -6,7 +6,7 @@
 
 #include "heap.h"
 
-#define N 100000000
+#define N 1000000000
 
 double get_execution_time(const struct timespec b_time,
                           const struct timespec e_time)
@@ -42,13 +42,13 @@ int main()
     Decrease_Key(&H, 1, 0);
     clock_gettime(CLOCK_REALTIME, &e_time);
 
-    printf("Time to decrease a key: %lf\n", get_execution_time(b_time, e_time));
+    printf("Time to decrease a key: %.25lf\n", get_execution_time(b_time, e_time));
 
     clock_gettime(CLOCK_REALTIME, &b_time);
     Insert_Key(&H, 100);
     clock_gettime(CLOCK_REALTIME, &e_time);
 
-    printf("Time to insert a key: %lf\n", get_execution_time(b_time, e_time));
+    printf("Time to insert a key: %.25lf\n", get_execution_time(b_time, e_time));
 
     //destructor(&H);
 
