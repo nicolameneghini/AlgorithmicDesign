@@ -43,7 +43,7 @@ float **allocate_matrix(const size_t rows,
    return A;
 }
 
-void deallocate_matrix(float **A, const size_t rows)
+void deallocate_matrix(void **A, const size_t rows)
 {
   for (size_t i=0; i<rows; i++) {
     free(A[i]);
@@ -68,4 +68,18 @@ int same_matrix(float **A, const size_t A_rows, const size_t A_cols,
    }
 
    return 1;
+}
+
+float **copy_matrix(float **orig, const size_t rows,
+                    const size_t cols)
+{
+  float **C=allocate_matrix(rows, cols);
+
+  for (size_t i=0; i<rows; i++) {
+    for (size_t j=0; j<cols; j++) {
+      C[i][j]=orig[i][j];
+    }
+  }
+
+  return C;
 }
