@@ -3,8 +3,6 @@
 #include "Dijkstra.h"
 #include "queue.h"
 
-//------------------- ***** DIJKSTRA ***** ---------------------------
-
 void init_SSSP(struct Graph *graph)
 {
 
