@@ -61,7 +61,6 @@ int main()
     dijkstra(graph2, source);
 
     printGraph(graph2);
-
     printPath(graph2);
 
     free_graph(graph2);
