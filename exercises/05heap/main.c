@@ -50,7 +50,5 @@ int main()
 
     printf("Time to insert a key: %.25lf\n", get_execution_time(b_time, e_time));
 
-    //destructor(&H);
-
     return 0;
 }

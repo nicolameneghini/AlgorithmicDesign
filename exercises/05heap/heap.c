@@ -85,11 +85,9 @@ void Decrease_Key(struct heap *H, size_t i, int value)
         printf("%d is not smaller than the node (%d)\n", value, H->node[i]);
 
     H->node[i] = value;
-    //std::size_t tmp = Parent(i);
 
     while (!(Is_Root(i) || H->node[Parent(i)] <= H->node[i]))
     {
-        //tmp = Parent(i);
         hswap(H, i, Parent(i));
         i = Parent(i);
     }
@@ -113,7 +111,6 @@ struct heap Build_Max_Heap(int *A, size_t length_of_A)
             break;
     }
 
-    //free(A);
     return alias;
 }
 
