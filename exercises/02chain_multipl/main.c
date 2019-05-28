@@ -2,68 +2,78 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "functions.h"
+#include "chain_mm.h"
+#include "matrix.h"
 
-#define MAX_ELEM_VALUE 25
 
-void randomly_fill_matrix(float **A, const size_t A_rows, const size_t A_cols)
-{
-  for (size_t i = 0; i < A_rows; i++)
-  {
-    for (size_t j = 0; j < A_cols; j++)
-    {
-      A[i][j] = rand() % (2 * MAX_ELEM_VALUE) - MAX_ELEM_VALUE;
-    }
+#define REPETITIONS 3
+#define BILLION 1E9
+
+
+size_t *build_dimensions(const size_t n) {
+  size_t *dims = (size_t *)malloc(sizeof(size_t) * (n + 1));
+
+  for (size_t i = 0; i < n + 1; i++) {
+    dims[i] = rand() % 600;
   }
+
+  return dims;
 }
 
-int main()
-{
+float ***build_problem_instance(const size_t *dims, const size_t n) {
+  float ***A = (float ***)malloc(sizeof(float **) * n);
 
-    float*** A;
+  for (size_t i = 0; i < n; i++) {
+    A[i] = allocate_matrix(dims[i], dims[i + 1]);
+  }
 
-    int row1 = 3, col1 = 5;
-    //A[1] = allocate_matrix(row1, col1);
-
-    int row2 = 5, col2 = 10;
-    //A[2] = allocate_matrix(row2, col2);
-    
-    int row3 = 10, col3 = 2;
-   // A[3] = allocate_matrix(row3, col3);
-
-    int row4 = 2, col4 = 3;
-    //A[4] = allocate_matrix(row4, col4);
-
-    int P[5];
-
-    //P[0] = row1; P[1] = col1; P[2] = row2; P[3] = col2; P[4] = row3; P[5] = col3; P[6] = row4; P[7] = col4;
-
-    P[0] = row1 ; P[1] = col1; P[2] = col2; P[3] = col3; P[4] = col4;
-
-    float**s;
-
-    s = allocate_matrix(4,4);
-
-    s = matrix_chain(P, 4);
-
-    printf("\n");
-    printf("\n");
-
-    for (size_t i = 0; i < 4; i++){
-
-    for (size_t j= 0; j < 4; j++)
-
-        printf("%f ", s[i][j]);
-
-        printf("\n");
-
+  return A;
 }
 
+int main() {
+  size_t n = 30;
 
-    
+  size_t *dims = build_dimensions(n);
+  float ***As = build_problem_instance(dims, n);
 
+  struct timespec requestStart, requestEnd;
+  double accum;
 
+  printf("Input Size\tOptimal Solution\tNaive Solution\n");
+  for (size_t d = 1; d < n; d++) {
+    printf("%ld", d);
+    clock_gettime(CLOCK_REALTIME, &requestStart);
+    for (int r = 0; r < REPETITIONS; r++) {
+      size_t **S = ChainMatrixMul(dims, d);
 
+      float **R = evaluate_CMM(As, dims, d, S);
 
-    return 0;
+      deallocate_matrix((void **)R, dims[0]);
+      deallocate_matrix((void **)S, d);
+    }
+    clock_gettime(CLOCK_REALTIME, &requestEnd);
+
+    accum = (requestEnd.tv_sec - requestStart.tv_sec) +
+            (requestEnd.tv_nsec - requestStart.tv_nsec) / BILLION;
+
+    printf("\t%lf", (accum / REPETITIONS));
+    clock_gettime(CLOCK_REALTIME, &requestStart);
+    for (int r = 0; r < REPETITIONS; r++) {
+
+      float **R = evaluate_naive_CMM(As, dims, d);
+      deallocate_matrix((void **)R, dims[0]);
+    }
+    clock_gettime(CLOCK_REALTIME, &requestEnd);
+
+    accum = (requestEnd.tv_sec - requestStart.tv_sec) +
+            (requestEnd.tv_nsec - requestStart.tv_nsec) / BILLION;
+
+    printf("\t%lf\n", (accum / REPETITIONS));
+  }
+
+  for (size_t i = 0; i < n; i++) {
+    deallocate_matrix((void **)As[i], dims[i]);
+  }
+  free(As);
+  free(dims);
 }

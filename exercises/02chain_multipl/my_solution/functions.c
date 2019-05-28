@@ -2,8 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 
-float **allocate_matrix(const size_t rows,
-                        const size_t cols)
+float **allocate_matrix(const size_t rows, const size_t cols)
 {
     float **A = (float **)calloc(sizeof(float *), rows);
 
