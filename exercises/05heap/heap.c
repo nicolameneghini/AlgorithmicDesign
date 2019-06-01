@@ -37,6 +37,30 @@ int Minimum(struct heap *H) { return H->node[0]; }
 
 void Heapify(struct heap *H, size_t i)
 {
+    size_t m = i, j = -1;
+
+    while (j != m)
+    {
+        j = m;
+        size_t child[2];
+        child[0] = Left(i);
+        child[1] = Right(i);
+
+        for (size_t k = 0; k < 2; k++)
+        {
+            if (Is_Valid_Node(H, child[k]) && H->node[child[k]] < H->node[i])
+                m = child[k];
+        }
+
+        if (j != m)
+        {
+            hswap(H, j, m);
+        }
+    }
+}
+
+/*void Heapify(struct heap *H, size_t i)
+{
     size_t m = i;
 
     if (Is_Valid_Node(H, Left(i)) && H->node[Left(i)] < H->node[i])
@@ -50,7 +74,7 @@ void Heapify(struct heap *H, size_t i)
         hswap(H, i, m);
         Heapify(H, m);
     }
-}
+}*/
 
 void Max_Heapify(struct heap *H, size_t i)
 {
