@@ -1,4 +1,4 @@
-## Homework for the Algorithm Design course
+## Homework for the Algorithmic Design course
 
 C implemenetation of:
 
