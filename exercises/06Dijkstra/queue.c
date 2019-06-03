@@ -7,7 +7,7 @@
 //allocates space for  a queue and initializes its parameters
 struct arrQueue *build_arrQueue(unsigned int capacity)
 {
-    struct arrQueue *queue = malloc(sizeof(struct arrQueue));
+    struct arrQueue *queue = (struct arrQueue *)malloc(sizeof(struct arrQueue));
     queue->capacity = capacity;
     queue->front = 0;
     queue->size = 0;

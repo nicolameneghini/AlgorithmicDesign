@@ -6,7 +6,7 @@
 
 struct heap *heap_constructor(int capacity)
 {
-    struct heap *H = malloc(sizeof(struct heap));
+    struct heap *H = (struct heap *)malloc(sizeof(struct heap));
 
     H->size = 0;
 
