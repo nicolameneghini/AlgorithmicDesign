@@ -48,11 +48,11 @@ void insertion_sort(double *A, unsigned int n)
 
     unsigned int j;
 
-    for (unsigned int i = 0; i < n; i++)
+    for (unsigned int i = 1; i < n; i++)
     {
         j = i;
 
-        while (j > 0 && A[j] < A[j - 1])
+        while (j >= 0 && A[j] < A[j - 1])
         {
             swap(A, j - 1, j);
             j--;

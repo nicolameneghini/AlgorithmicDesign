@@ -93,7 +93,7 @@ int main()
     for(unsigned int i = 0; i < N; i++)
         fprintf(inssort, "%d %f \n", i, InsertionSorted[i]);
     fclose(inssort);*/
-    free(InsertionSorted_worst);
+    free(InsertionSorted_best);
 
     fprintf(times, "\t %.5lf", get_execution_time(b_time, e_time));
 
