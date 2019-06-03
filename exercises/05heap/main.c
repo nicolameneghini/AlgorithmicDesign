@@ -6,7 +6,7 @@
 
 #include "heap.h"
 
-#define N 1000000000
+#define N 100000000
 
 double get_execution_time(const struct timespec b_time,
                           const struct timespec e_time)

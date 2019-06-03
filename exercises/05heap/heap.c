@@ -35,7 +35,7 @@ bool Is_Valid_Node(struct heap *H, size_t i) { return i <= H->size; }
 
 int Minimum(struct heap *H) { return H->node[0]; }
 
-void Heapify(struct heap *H, size_t i)
+/*void Heapify(struct heap *H, size_t i)
 {
     size_t m = i, j = -1;
 
@@ -57,9 +57,9 @@ void Heapify(struct heap *H, size_t i)
             hswap(H, j, m);
         }
     }
-}
+}*/
 
-/*void Heapify(struct heap *H, size_t i)
+void Heapify(struct heap *H, size_t i)
 {
     size_t m = i;
 
@@ -74,7 +74,7 @@ void Heapify(struct heap *H, size_t i)
         hswap(H, i, m);
         Heapify(H, m);
     }
-}*/
+}
 
 void Max_Heapify(struct heap *H, size_t i)
 {
